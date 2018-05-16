@@ -17,14 +17,13 @@ public class JokeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_joke);
         Intent intent = getIntent();
-        if (intent == null || intent.hasExtra(JokeActivity.JOKE_KEY)) {
-            Log.e(TAG, "Missing joke extra string" + JOKE_KEY);
+        if (intent == null || !intent.hasExtra(JokeActivity.JOKE_KEY)) {
+            Log.e(TAG, "Missing joke extra string " + JOKE_KEY);
             return;
         }
-
         String jokeText = intent.getStringExtra(JokeActivity.JOKE_KEY);
         TextView jokeTextView = findViewById(R.id.joke_text_view);
-        if (TextUtils.isEmpty(jokeText)) {
+        if (!TextUtils.isEmpty(jokeText)) {
             jokeTextView.setText(jokeText);
         }
     }

@@ -3,8 +3,9 @@ package com.udacity.gradle.builditbigger;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
+import android.view.View;
 
 import com.andreea.jokeactivitylibrary.JokeActivity;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -53,7 +54,7 @@ public class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         Log.d(TAG, "onPostExecute: result "+result);
-        Toast.makeText(context, result, Toast.LENGTH_LONG).show();
+        ((AppCompatActivity)context).findViewById(R.id.joke_progress_bar).setVisibility(View.GONE);
         Intent intent = new Intent(context, JokeActivity.class);
 
         intent.putExtra(JokeActivity.JOKE_KEY, result);

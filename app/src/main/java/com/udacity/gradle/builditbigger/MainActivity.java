@@ -1,18 +1,24 @@
 package com.udacity.gradle.builditbigger;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
+
+import com.andreea.jokeactivitylibrary.JokeActivity;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IEndpointCallback {
+    private ProgressBar jokeLoadingProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        jokeLoadingProgressBar = findViewById(R.id.joke_progress_bar);
     }
 
 
@@ -40,8 +46,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void tellJoke(View view) {
         new EndpointsAsyncTask().execute(this);
-        findViewById(R.id.joke_progress_bar).setVisibility(View.VISIBLE);
+        jokeLoadingProgressBar.setVisibility(View.VISIBLE);
     }
 
 
+    @Override
+    public void onResultReady(String result) {
+        jokeLoadingProgressBar.setVisibility(View.GONE);
+        Intent intent = new Intent(this, JokeActivity.class);
+        intent.putExtra(JokeActivity.JOKE_KEY, result);
+        startActivity(intent);
+    }
 }

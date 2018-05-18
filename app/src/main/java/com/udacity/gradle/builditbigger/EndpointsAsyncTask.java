@@ -1,13 +1,8 @@
 package com.udacity.gradle.builditbigger;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 
-import com.andreea.jokeactivitylibrary.JokeActivity;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
@@ -16,13 +11,13 @@ import com.udacity.gradle.builditbigger.backend.myApi.MyApi;
 
 import java.io.IOException;
 
-public class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
+public class EndpointsAsyncTask extends AsyncTask<IEndpointCallback, Void, String> {
     private static final String TAG = EndpointsAsyncTask.class.getSimpleName();
     private static MyApi myApiService = null;
-    private Context context;
+    private IEndpointCallback callback;
 
     @Override
-    protected String doInBackground(Context... params) {
+    protected String doInBackground(IEndpointCallback... params) {
         if (myApiService == null) {  // Only do this once
             MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)
@@ -41,24 +36,20 @@ public class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
             myApiService = builder.build();
         }
 
-        context = params[0];
+        callback = params[0];
 
         try {
             return myApiService.getJoke().execute().getData();
         } catch (IOException e) {
-            Log.e(TAG, "doInBackground: ",e );
+            Log.e(TAG, "doInBackground: ", e);
             return e.getMessage();
         }
     }
 
     @Override
     protected void onPostExecute(String result) {
-        Log.d(TAG, "onPostExecute: result "+result);
-        ((AppCompatActivity)context).findViewById(R.id.joke_progress_bar).setVisibility(View.GONE);
-        Intent intent = new Intent(context, JokeActivity.class);
-
-        intent.putExtra(JokeActivity.JOKE_KEY, result);
-        context.startActivity(intent);
+        Log.d(TAG, "onPostExecute: result " + result);
+        callback.onResultReady(result);
     }
 }
 

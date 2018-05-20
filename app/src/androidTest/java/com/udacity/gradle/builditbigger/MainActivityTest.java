@@ -44,6 +44,6 @@ public class MainActivityTest {
         onView(withId(R.id.tell_joke_button)).perform(click());
         ViewInteraction jokeTextView = onView(withResourceName(Matchers.equalTo("joke_text_view")));
         jokeTextView.check(ViewAssertions.matches(withText(Matchers.not(Matchers.isEmptyOrNullString()))));
-        jokeTextView.check(ViewAssertions.matches(withText("This is a funny joke!")));
+        jokeTextView.check(ViewAssertions.matches(withText("What did the router tell the doctor? \n- It hurts when IP!")));
     }
 }

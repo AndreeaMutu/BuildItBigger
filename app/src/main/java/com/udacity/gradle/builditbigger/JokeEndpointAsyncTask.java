@@ -11,8 +11,8 @@ import com.udacity.gradle.builditbigger.backend.myApi.MyApi;
 
 import java.io.IOException;
 
-public class EndpointsAsyncTask extends AsyncTask<IEndpointCallback, Void, String> {
-    private static final String TAG = EndpointsAsyncTask.class.getSimpleName();
+public class JokeEndpointAsyncTask extends AsyncTask<IEndpointCallback, Void, String> {
+    private static final String TAG = JokeEndpointAsyncTask.class.getSimpleName();
     private static MyApi myApiService = null;
     private IEndpointCallback callback;
 
@@ -31,9 +31,7 @@ public class EndpointsAsyncTask extends AsyncTask<IEndpointCallback, Void, Strin
                             abstractGoogleClientRequest.setDisableGZipContent(true);
                         }
                     });
-            // end options for devappserver
-
-            myApiService = builder.build();
+             myApiService = builder.build();
         }
 
         callback = params[0];
@@ -42,7 +40,7 @@ public class EndpointsAsyncTask extends AsyncTask<IEndpointCallback, Void, Strin
             return myApiService.getJoke().execute().getData();
         } catch (IOException e) {
             Log.e(TAG, "doInBackground: ", e);
-            return e.getMessage();
+            return "";
         }
     }
 

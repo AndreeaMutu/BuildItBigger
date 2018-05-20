@@ -2,6 +2,7 @@ package com.udacity.gradle.builditbigger;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.test.espresso.idling.CountingIdlingResource;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +14,7 @@ import com.andreea.jokeactivitylibrary.JokeActivity;
 
 public class MainActivity extends AppCompatActivity implements IEndpointCallback {
     private ProgressBar jokeLoadingProgressBar;
+    private final CountingIdlingResource countingIdlingResource = new CountingIdlingResource("MainActivity");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,16 +47,21 @@ public class MainActivity extends AppCompatActivity implements IEndpointCallback
     }
 
     public void tellJoke(View view) {
-        new EndpointsAsyncTask().execute(this);
+        new JokeEndpointAsyncTask().execute(this);
+        countingIdlingResource.increment();
         jokeLoadingProgressBar.setVisibility(View.VISIBLE);
     }
 
-
     @Override
     public void onResultReady(String result) {
+        countingIdlingResource.decrement();
         jokeLoadingProgressBar.setVisibility(View.GONE);
         Intent intent = new Intent(this, JokeActivity.class);
         intent.putExtra(JokeActivity.JOKE_KEY, result);
         startActivity(intent);
+    }
+
+    public CountingIdlingResource getIdlingResource() {
+        return countingIdlingResource;
     }
 }
